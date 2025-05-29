@@ -84,8 +84,15 @@
             parentPolicySelect.addEventListener('change', function() {
                 if (this.value) {
                     parentCoverageOptions.style.display = 'block';
+                    // Select the first radio button by default
+                    document.getElementById('father').checked = true;
                 } else {
                     parentCoverageOptions.style.display = 'none';
+                    // Clear all radio selections when parent policy is deselected
+                    const radioButtons = document.querySelectorAll('input[name="parent_coverage"]');
+                    radioButtons.forEach(button => {
+                        button.checked = false;
+                    });
                 }
             });
         });
@@ -127,7 +134,7 @@
             <div id="parent_coverage_options" class="radio-group">
                 <label>Select Parent Coverage:</label>
                 <div class="radio-option">
-                    <input type="radio" id="father" name="parent_coverage" value="father">
+                    <input type="radio" id="father" name="parent_coverage" value="father" required>
                     <label for="father">Father / Father-in-Law</label>
                 </div>
                 <div class="radio-option">

@@ -60,6 +60,11 @@ def submit():
         if not esc_policy:
             flash('ESC Policy selection is mandatory', 'error')
             return redirect(url_for('home'))
+            
+        # Validate parent coverage is selected if parent policy is selected
+        if parent_policy and not parent_coverage:
+            flash('Please select a parent coverage option', 'error')
+            return redirect(url_for('home'))
         
         # Calculate totals
         total_coverage = 0
