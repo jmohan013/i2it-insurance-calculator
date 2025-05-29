@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Policy Selection Results</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .result-section {
+            margin-bottom: 20px;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+        }
+        h1 {
+            color: #333;
+        }
+        h2 {
+            color: #555;
+            margin-top: 0;
+        }
+        p {
+            margin: 5px 0;
+        }
+        .selection {
+            font-weight: bold;
+            color: #4CAF50;
+        }
+        .back-button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            text-decoration: none;
+            display: inline-block;
+            margin-top: 20px;
+        }
+        .back-button:hover {
+            background-color: #45a049;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+        th, td {
+            padding: 8px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        .subtotal-row {
+            background-color: #f5f5f5;
+        }
+        .ctc-row {
+            background-color: #fff3e0;
+            color: #e65100;
+        }
+        .total-row {
+            font-weight: bold;
+            background-color: #e9f7e9;
+        }
+        .monthly-row {
+            font-weight: bold;
+            background-color: #e6f7ff;
+        }
+        .coverage-type {
+            font-style: italic;
+            color: #666;
+        }
+        .minus-sign {
+            font-weight: bold;
+            color: #e65100;
+        }
+    </style>
+</head>
+<body>
+    <h1>Your Policy Selections</h1>
+    
+    <div class="result-section">
+        <h2>Selected Policies</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Policy Type</th>
+                    <th>Coverage (₹)</th>
+                    <th>Premium (₹)</th>
+                    <th>Details</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>ESC Policy</td>
+                    <td>{{ '{:,}'.format(selections['ESC Policy']['coverage']) }}</td>
+                    <td>{{ '{:,}'.format(selections['ESC Policy']['premium']) }}</td>
+                    <td>Employee + Spouse + Children</td>
+                </tr>
+                {% if selections['Parent Policy']['coverage'] %}
+                <tr>
+                    <td>Parent Policy</td>
+                    <td>{{ '{:,}'.format(selections['Parent Policy']['coverage']) }}</td>
+                    <td>{{ '{:,}'.format(selections['Parent Policy']['premium']) }}</td>
+                    <td><span class="coverage-type">{{ selections['Parent Policy']['coverage_type'] }}</span></td>
+                </tr>
+                {% endif %}
+                {% if selections['Top-Up Policy']['coverage'] %}
+                <tr>
+                    <td>Top-Up Policy</td>
+                    <td>{{ '{:,}'.format(selections['Top-Up Policy']['coverage']) }}</td>
+                    <td>{{ '{:,}'.format(selections['Top-Up Policy']['premium']) }}</td>
+                    <td>Additional Coverage</td>
+                </tr>
+                {% endif %}
+                <tr class="subtotal-row">
+                    <td>Subtotal</td>
+                    <td></td>
+                    <td>{{ '{:,}'.format(selections['Subtotal']['premium']) }}</td>
+                    <td></td>
+                </tr>
+                <tr class="ctc-row">
+                    <td>From CTC</td>
+                    <td></td>
+                    <td><span class="minus-sign">- {{ '{:,}'.format(selections['From CTC']['premium']) }}</span></td>
+                    <td>Company Contribution</td>
+                </tr>
+                <tr class="total-row">
+                    <td>Total</td>
+                    <td>{{ '{:,}'.format(selections['Total']['coverage']) }}</td>
+                    <td>{{ '{:,}'.format(selections['Total']['premium']) }}</td>
+                    <td>Amount to be paid</td>
+                </tr>
+                <tr class="monthly-row">
+                    <td>Monthly Share</td>
+                    <td></td>
+                    <td>{{ '{:,}'.format(selections['Total']['monthly_share']) }}</td>
+                    <td>(Total Premium ÷ 10)</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    
+    <a href="{{ url_for('home') }}" class="back-button">Make New Selection</a>
+</body>
+</html>

@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Insurance Policy Selection</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .policy-section {
+            margin-bottom: 30px;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+        }
+        h2 {
+            color: #333;
+            margin-top: 0;
+        }
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+        select {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+            margin-bottom: 15px;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .option-details {
+            font-size: 0.9em;
+            color: #666;
+        }
+        .radio-group {
+            margin-top: 15px;
+            display: none;
+        }
+        .radio-option {
+            margin-bottom: 10px;
+        }
+        .radio-option input {
+            margin-right: 8px;
+        }
+        .mandatory {
+            color: red;
+            font-size: 0.8em;
+            margin-left: 5px;
+        }
+        .flash-message {
+            padding: 10px;
+            margin-bottom: 20px;
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+            border-radius: 4px;
+        }
+    </style>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Show/hide parent coverage options based on parent policy selection
+            const parentPolicySelect = document.getElementById('parent_policy');
+            const parentCoverageOptions = document.getElementById('parent_coverage_options');
+            
+            parentPolicySelect.addEventListener('change', function() {
+                if (this.value) {
+                    parentCoverageOptions.style.display = 'block';
+                } else {
+                    parentCoverageOptions.style.display = 'none';
+                }
+            });
+        });
+    </script>
+</head>
+<body>
+    <h1>Insurance Policy Selection</h1>
+    
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="flash-message">{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+    
+    <form method="POST" action="{{ url_for('submit') }}">
+        <div class="policy-section">
+            <h2>1. ESC Policy (Employee + Spouse + Children) <span class="mandatory">*Mandatory</span></h2>
+            <label for="esc_policy">Select ESC Policy Option:</label>
+            <select id="esc_policy" name="esc_policy" required>
+                <option value="">-- Select an option --</option>
+                {% for option_id, details in esc_options.items() %}
+                <option value="{{ option_id }}">₹{{ '{:,}'.format(details.coverage) }} Coverage - Premium: ₹{{ '{:,}'.format(details.premium) }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="policy-section">
+            <h2>2. Parent Policy (Optional)</h2>
+            <label for="parent_policy">Select Parent Policy Option:</label>
+            <select id="parent_policy" name="parent_policy">
+                <option value="">-- Select an option --</option>
+                {% for option_id, details in parent_options.items() %}
+                <option value="{{ option_id }}">₹{{ '{:,}'.format(details.coverage) }} Coverage - Premium: ₹{{ '{:,}'.format(details.premium) }}</option>
+                {% endfor %}
+            </select>
+            
+            <div id="parent_coverage_options" class="radio-group">
+                <label>Select Parent Coverage:</label>
+                <div class="radio-option">
+                    <input type="radio" id="father" name="parent_coverage" value="father">
+                    <label for="father">Father / Father-in-Law</label>
+                </div>
+                <div class="radio-option">
+                    <input type="radio" id="mother" name="parent_coverage" value="mother">
+                    <label for="mother">Mother / Mother-in-Law</label>
+                </div>
+                <div class="radio-option">
+                    <input type="radio" id="both" name="parent_coverage" value="both">
+                    <label for="both">Father / Father-in-Law & Mother / Mother-in-Law</label>
+                </div>
+            </div>
+        </div>
+
+        <div class="policy-section">
+            <h2>3. Top-Up Policy (Optional)</h2>
+            <label for="topup_policy">Select Top-Up Policy Option:</label>
+            <select id="topup_policy" name="topup_policy">
+                <option value="">-- Select an option --</option>
+                {% for option_id, details in topup_options.items() %}
+                <option value="{{ option_id }}">₹{{ '{:,}'.format(details.coverage) }} Coverage - Premium: ₹{{ '{:,}'.format(details.premium) }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <button type="submit">Calculate Premium</button>
+    </form>
+</body>
+</html>
